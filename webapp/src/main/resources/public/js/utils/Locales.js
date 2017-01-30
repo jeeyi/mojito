@@ -3,28 +3,117 @@ import _ from "lodash";
 
 Cldr.load(require('cldr-data/supplemental/likelySubtags.json'));
 
-//TODO Load all locale data for now in the bundle... as number of locale grows we should only used locale data.
-Cldr.load(require('cldr-data/main/be/languages.json'));
-Cldr.load(require('cldr-data/main/be/territories.json'));
+Cldr.load(require('cldr-data/main/' + LOCALE + '/languages.json'));
+Cldr.load(require('cldr-data/main/' + LOCALE + '/territories.json'));
 
-Cldr.load(require('cldr-data/main/en/languages.json'));
-Cldr.load(require('cldr-data/main/en/territories.json'));
-
-Cldr.load(require('cldr-data/main/fr/languages.json'));
-Cldr.load(require('cldr-data/main/fr/territories.json'));
-
-Cldr.load(require('cldr-data/main/ko/languages.json'));
-Cldr.load(require('cldr-data/main/ko/territories.json'));
-
-Cldr.load(require('cldr-data/main/ru/languages.json'));
-Cldr.load(require('cldr-data/main/ru/territories.json'));
+let territoryAndLanguageMap = {
+    'be': { language: 'be',
+          territory: '',
+          displayLanguage: 'беларуская',
+          displayTerritory: 'Беларусь'
+        },
+    'cs': { language: 'cs',
+          territory: 'CZ',
+          displayLanguage: 'čeština',
+          displayTerritory: 'Česká republika'
+        },
+    'de': { language: 'de',
+          territory: 'DE',
+          displayLanguage: 'Deutsch',
+          displayTerritory: 'Deutschland'
+        },
+    'el': { language: 'el',
+          territory: 'GR',
+          displayLanguage: 'Ελληνικά',
+          displayTerritory: 'Ελλάδα'
+        },
+    'en': { language: 'en',
+          territory: 'US',
+          displayLanguage: 'English',
+          displayTerritory: 'United States'
+        },
+    'es': { language: 'es',
+          territory: 'ES',
+          displayLanguage: 'español',
+          displayTerritory: 'España'
+        },
+    'fr': { language: 'fr',
+          territory: 'FR',
+          displayLanguage: 'français',
+          displayTerritory: 'France'
+        },
+    'id': { language: 'id',
+          territory: 'ID',
+          displayLanguage: 'Indonesia',
+          displayTerritory: 'Indonesia'
+        },
+    'it': { language: 'it',
+          territory: 'IT',
+          displayLanguage: 'italiano',
+          displayTerritory: 'Italia'
+        },
+    'ja': { language: 'ja',
+          territory: 'JP',
+          displayLanguage: '日本語',
+          displayTerritory: '日本'
+        },
+    'ko': { language: 'ko',
+          territory: 'KR',
+          displayLanguage: '한국어',
+          displayTerritory: '대한민국'
+        },
+    'ms': { language: 'ms',
+          territory: 'MY',
+          displayLanguage: 'Bahasa Melayu',
+          displayTerritory: 'Malaysia'
+        },
+    'nl': { language: 'nl',
+          territory: 'NL',
+          displayLanguage: 'Nederlands',
+          displayTerritory: 'Nederland'
+        },
+    'pl': { language: 'pl',
+          territory: 'PL',
+          displayLanguage: 'polski',
+          displayTerritory: 'Polska'
+        },
+    'pt': { language: 'pt',
+          territory: 'BR',
+          displayLanguage: 'português',
+          displayTerritory: 'Brasil'
+        },
+    'ru': { language: 'ru',
+          territory: 'RU',
+          displayLanguage: 'русский',
+          displayTerritory: 'Россия'
+        },
+    'tr': { language: 'tr',
+          territory: 'TR',
+          displayLanguage: 'Türkçe',
+          displayTerritory: 'Türkiye'
+        },
+    'vi': { language: 'vi',
+          territory: 'VN',
+          displayLanguage: 'Tiếng Việt',
+          displayTerritory: 'Việt Nam'
+        },
+    'zh-Hans': { language: 'zh-Hans',
+          territory: 'CN',
+          displayLanguage: '中文',
+          displayTerritory: '中国'
+        },
+    'zh-Hant': { language: 'zh-Hant',
+          territory: 'TW',
+          displayLanguage: '中文',
+          displayTerritory: '台灣'
+        }
+};
 
 class Locales {
 
     constructor() {
         //TODO don't use global var for LOCALE?
         this.currentLocale = LOCALE;
-
         this.cldr = new Cldr(this.currentLocale);
     }
 
@@ -38,11 +127,35 @@ class Locales {
     getSupportedLocales() {
         return [
             'be',
+            'cs',
+            'de',
+            'el',
             'en',
+            'es',
             'fr',
+            'id',
+            'it',
+            'ja',
             'ko',
-            'ru'
+            'ms',
+            'nl',
+            'pl',
+            'pt',
+            'ru',
+            'tr',
+            'vi',
+            'zh-Hans',
+            'zh-Hant'
         ];
+    }
+
+    /**
+     * Gets the language and territory information of the bcp47 tag
+     *
+     * @returns {string} bcp47 tag
+     */
+    getLanguageAndTerritory(bcp47Tag) {
+        return territoryAndLanguageMap[bcp47Tag];
     }
 
     /**
@@ -118,13 +231,13 @@ class Locales {
      * @returns {string} the native display name
      */
     getNativeDispalyName(bcp47Tag) {
-        const targetCldr = new Cldr(bcp47Tag);
+        const langAndTerritoryInfo = this.getLanguageAndTerritory(bcp47Tag);
 
-        const language = targetCldr.attributes.language;
-        const territory = targetCldr.attributes.territory;
+        const language = langAndTerritoryInfo.language;
+        const territory = langAndTerritoryInfo.territory;
 
-        const languageDisplay = targetCldr.main("localeDisplayNames/languages/" + language);
-        const regionDisplay = targetCldr.main("localeDisplayNames/territories/" + territory);
+        const languageDisplay = langAndTerritoryInfo.displayLanguage;
+        const regionDisplay = langAndTerritoryInfo.displayTerritory;
 
         return languageDisplay + ' (' + regionDisplay + ')';
     }
