@@ -105,7 +105,7 @@
                 </executions>
             </plugin>
 
-            <!-- Jar Signing -- >
+            <!-- Jar Signing -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
