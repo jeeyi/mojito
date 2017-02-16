@@ -52,7 +52,7 @@
         <connection>scm:git:git@github.com:jeeyi/mojito.git</connection>
         <developerConnection>scm:git:git@github.com:jeeyi/mojito.git</developerConnection>
         <tag>v0.47</tag>
-  </scm>
+    </scm>
 
     <build>
         <plugins>
@@ -76,6 +76,34 @@
                     <scmCommentPrefix xml:space="preserve">MOJITO RELEASE: </scmCommentPrefix>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.jfrog.buildinfo</groupId>
+                <artifactId>artifactory-maven-plugin</artifactId>
+                <version>2.6.1</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>publish</goal>
+                        </goals>
+                        <configuration>
+                            <deployProperties>
+                                <gradle>awesome</gradle>
+                            </deployProperties>
+                            <publisher>
+                                <contextUrl>https://box.artifactoryonline.com/box</contextUrl>
+                                <username>${username}</username>
+                                <password>${password}</password>
+                                <!--<repoKey>box-maven-releases</repoKey>-->
+                                <repoKey>box-maven-snapshots</repoKey>
+                                <snapshotRepoKey>box-maven-snapshots</snapshotRepoKey>
+                            </publisher>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -84,18 +112,18 @@
             <id>release</id>
 
             <!-- Deployment setup to push artifacts to Nexus -->
-            <distributionManagement>
-                <!--<repository>
+<!--            <distributionManagement>
+                <repository>
                     <id>central</id>
                     <name>box-releases</name>
                     <url>https://box.artifactoryonline.com/box/box-maven-releases</url>
-                </repository>-->
+                </repository>
                 <repository>
                     <id>snapshots</id>
                     <name>box-snapshots</name>
                     <url>https://box.artifactoryonline.com/box/box-maven-snapshots</url>
                 </repository>
-            </distributionManagement>
+            </distributionManagement>-->
 
             <build>
                 <plugins>
@@ -109,7 +137,7 @@
                     </plugin>
 
                     <!-- Enable deployment of artifacts -->
-                    <plugin>
+<!--                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
                         <version>2.8.2</version>
@@ -118,7 +146,7 @@
                             <retryFailedDeploymentCount>0</retryFailedDeploymentCount>
                             <updateReleaseInfo>true</updateReleaseInfo>
                         </configuration>
-                    </plugin>
+                    </plugin>-->
 
                     <!-- Generate sources and attach the artifact to the build -->
                     <plugin>
